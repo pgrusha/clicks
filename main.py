@@ -42,16 +42,16 @@ if __name__ == '__main__':
     load_dotenv()
     token = os.getenv("BITLY_TOKEN")
     parser = create_parser()
-    namespace = parser.parse_args()
-    if is_short_link(token, namespace.url):
+    args = parser.parse_args()
+    if is_short_link(token, args.url):
         try:
-            clicks_count = count_clicks(token, namespace.url)
+            clicks_count = count_clicks(token, args.url)
             print('Количество кликов', clicks_count)
         except requests.exceptions.HTTPError:
             print('Сервер вернул ошибку. Возможно, адрес неверный')
     else:
         try:
-            bitlink = shorten_link(token, namespace.url)
+            bitlink = shorten_link(token, args.url)
             print('Битлинк', bitlink)
         except requests.exceptions.HTTPError:
             print('Сервер вернул ошибку. Возможно, адрес неверный')
