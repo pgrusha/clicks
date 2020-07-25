@@ -4,11 +4,12 @@
 
 ## Как установить
 
-Зарегистрируйтесь на сервисе <a href="https://bit.ly/">bit.ly</a>, подтвердите адрес электронной почты, сгенерируйте токен в пункте меню "GENERIC ACCESS TOKEN". Токен представляет собой набор из сорака букв латинского алфавита и цифр.
+Зарегистрируйтесь на сервисе <a href="https://bit.ly/">bit.ly</a>, подтвердите адрес электронной почты, сгенерируйте токен в пункте меню "GENERIC ACCESS TOKEN". Токен представляет собой набор из сорока букв латинского алфавита и цифр.
 
 Python3 должен быть уже установлен. Затем используйте pip (или pip3, есть конфликт с Python2) для установки зависимостей:
 
-```pip install -r requirements.txt
+```
+pip install -r requirements.txt
 ```
 
 ## Цель проекта
@@ -17,8 +18,10 @@ Python3 должен быть уже установлен. Затем испол
 
 ## Пример запуска
 
-```python.exe main.py https://www.python.org/downloads/
+```
+python.exe main.py https://www.python.org/downloads/
 ```
 
-```python.exe main.py https://bit.ly/2OSoI5r
+```
+python.exe main.py https://bit.ly/2OSoI5r
 ```
