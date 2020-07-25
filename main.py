@@ -21,22 +21,18 @@ def shorten_link(token, url):
 
 
 def is_short_link(token, url):
-    sep_url = urlparse(url)
+    scheme, *_ = urlparse(url)
     headers = {'Authorization':'Bearer {}'.format(token)}
-    payload = {'bitlink_id': url[len(sep_url[0]) + 3:]}
+    payload = {'bitlink_id': url[len(scheme) + 3:]}
     service_url = 'https://api-ssl.bitly.com/v4/expand'
     response = requests.post(service_url, headers=headers, json=payload)
-    try:
-        response.raise_for_status()
-    except requests.exceptions.HTTPError:
-        return False
-    return True
+    return response.ok
 
 
 def count_clicks(token, link):
-    sep_url = urlparse(link)
+    _, netloc, path, *_ = urlparse(link)
     headers = {'Authorization':'Bearer {}'.format(token)}
-    service_url = 'https://api-ssl.bitly.com/v4/bitlinks/{}/{}/clicks/summary'.format(sep_url[1], sep_url[2])
+    service_url = 'https://api-ssl.bitly.com/v4/bitlinks/{}/{}/clicks/summary'.format(netloc, path)
     response = requests.get(service_url, headers=headers)
     response.raise_for_status()
     return response.json()['total_clicks']
@@ -46,21 +42,16 @@ if __name__ == '__main__':
     load_dotenv()
     token = os.getenv("BITLY_TOKEN")
     parser = create_parser()
-    cline_params = parser.parse_args()
-    if is_short_link(token, cline_params.url):
+    namespace = parser.parse_args()
+    if is_short_link(token, namespace.url):
         try:
-            success = True
-            clicks_count = count_clicks(token, cline_params.url)
-        except requests.exceptions.HTTPError:
-            success = False
-            print('Сервер вернул ошибку. Возможно, адрес неверный')
-        if success:
+            clicks_count = count_clicks(token, namespace.url)
             print('Количество кликов', clicks_count)
+        except requests.exceptions.HTTPError:
+            print('Сервер вернул ошибку. Возможно, адрес неверный')
     else:
         try:
-            bitlink = shorten_link(token, cline_params.url)
-        except requests.exceptions.HTTPError:
-            bitlink = None
-            print('Сервер вернул ошибку. Возможно, адрес неверный')
-        if bitlink:
+            bitlink = shorten_link(token, namespace.url)
             print('Битлинк', bitlink)
+        except requests.exceptions.HTTPError:
+            print('Сервер вернул ошибку. Возможно, адрес неверный')
