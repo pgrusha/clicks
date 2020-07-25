@@ -4,10 +4,7 @@ import sys
 import argparse
 from dotenv import load_dotenv
 
-load_dotenv()
-
-
-def createParser ():
+def create_parser ():
     parser = argparse.ArgumentParser()
     parser.add_argument ('url', nargs='?')
     return parser
@@ -35,14 +32,13 @@ def count_clicks(token, link):
 
 
 if __name__ == '__main__':
+    load_dotenv()
     token = os.getenv("BITLY_TOKEN")
-#    print('Введите ссылку')
-#    url = input()
-    parser = createParser()
-    namespace = parser.parse_args()
-    if (namespace.url.startswith('https://bit.ly/')):
+    parser = create_parser()
+    cline_params = parser.parse_args()
+    if (cline_params.url.startswith('https://bit.ly/')):
         try:
-            clicks_count = count_clicks(token, namespace.url)
+            clicks_count = count_clicks(token, cline_params.url)
         except requests.exceptions.HTTPError:
             clicks_count = None
             print('Сервер вернул ошибку. Возможно, адрес неверный')
@@ -50,7 +46,7 @@ if __name__ == '__main__':
             print('Количество кликов', clicks_count)
     else:
         try:
-            bitlink = shorten_link(token, namespace.url)
+            bitlink = shorten_link(token, cline_params.url)
         except requests.exceptions.HTTPError:
             bitlink = None
             print('Сервер вернул ошибку. Возможно, адрес неверный')
